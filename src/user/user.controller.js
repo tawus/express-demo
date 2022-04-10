@@ -9,9 +9,9 @@ function login(req, res) {
         .login(req.body)
         .then((user) => {
             if (!user) {
-                res.status(404).send();
+                res.redirect('/login/failure');
             } else {
-                res.status(200).send(user);
+                res.redirect('/login/success');
             }
         })
         .catch((error) => errorToConsole(error, res));
