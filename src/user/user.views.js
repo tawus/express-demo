@@ -1,31 +1,7 @@
 const express = require('express');
 
 function login_form(req, res) {
-    res.setHeader("Content-Type", "text/html");
-    res.set('Cache-Control', 'no-store');
-    res.set('etag', false);
-    res.status(200)
-        .send(
-        `<!doctype html>
-         <html>
-           <head><title>Login</title></head>
-           <body>
-              <form method='post' action='/api/user/login'>
-                 <div class='form-element'>
-                    <label for='email'>Email</label>
-                    <input type='email' id='email' name='email'/>
-                  </div>
-                  <div class='form-element'>
-                    <label for='password'>Password</label>
-                    <input type='password' id='password' name='password'/>
-                  </div>
-                  <div class='form-buttons'>
-                     <button type='submit'>Login</button>
-                  </div>
-              </form>
-           </body>
-          </html>`
-    );
+    res.render('user/login');
 }
 
 function login_failure(req, res) {
