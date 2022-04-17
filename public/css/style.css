@@ -1,0 +1,26 @@
+
+#main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.form-element {
+    margin: 10px 0;
+}
+
+.form-element label {
+    display: block;
+}
+
+.form-element.field-error label {
+    color:red;
+}
+
+.form-element.field-error .error-message {
+    color: red;
+    font-size: 90%;
+}
+
+.form-element.ok .error-message {
+    display: none;
+}

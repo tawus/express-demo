@@ -1,10 +1,16 @@
 const express = require("express");
 const userDB = require("./user.db");
 const router = express.Router();
-const {body} = require("express-validator");
+const {body, validationResult} = require("express-validator");
 const {errorToConsole, defaultValidation} = require("../utils");
 
 function login(req, res) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.render('user/login', {errors: errors.mapped()});
+        return;
+    }
+
     return userDB
         .login(req.body)
         .then((user) => {
@@ -26,15 +32,18 @@ function signup(req, res) {
 
 const passwordCheck = body("password")
     .not()
-    .isEmpty()
-    .isLength({min: 5})
-    .withMessage("Password must be atleast 5 letters long");
+      .isEmpty()
+      .withMessage("Password is required")
+      .isLength({min: 5})
+      .withMessage("Password must be atleast 5 letters long");
 
 router.post(
     "/login",
-    body("email").isEmail().normalizeEmail(),
+    body("email")
+        .isEmpty()
+        .withMessage("Email is required")
+        .isEmail().normalizeEmail().withMessage("Not a valid email"),
     passwordCheck,
-    defaultValidation,
     login,
 );
 

@@ -11,5 +11,5 @@ app.use(bodyParser.json());
 app.set('view engine', 'pug');
 app.use('/api/user', userRouter);
 app.use('/login', viewsRouter);
-
+app.use(express.static('public'));
 app.listen(8000);
