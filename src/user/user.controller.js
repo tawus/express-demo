@@ -6,18 +6,35 @@ const {errorToConsole, defaultValidation} = require("../utils");
 
 function login(req, res) {
     const errors = validationResult(req);
+    const isJson = req.headers['content-type'] === 'application/json'; 
     if (!errors.isEmpty()) {
-        res.render('user/login', {errors: errors.mapped()});
-        return;
+        if (isJson) {
+            return res.status(400).json({errors: errors.mapped()});
+        } else {
+            res.render('user/login', {errors: errors.mapped()});
+            return;
+        }
     }
 
     return userDB
         .login(req.body)
         .then((user) => {
-            if (!user) {
-                res.redirect('/login/failure');
+            if (isJson) {
+                if (user) {
+                    return res.status(204).send();
+                } else {
+                    return res.status(400).send({
+                        errors: {
+                            "email": "Invalid email or password"
+                        }
+                    });
+                }
             } else {
-                res.redirect('/login/success');
+                if (!user) {
+                    res.redirect('/login/failure');
+                } else {
+                    res.redirect('/login/success');
+                }
             }
         })
         .catch((error) => errorToConsole(error, res));
@@ -40,7 +57,7 @@ const passwordCheck = body("password")
 router.post(
     "/login",
     body("email")
-        .isEmpty()
+    .not().isEmpty()
         .withMessage("Email is required")
         .isEmail().normalizeEmail().withMessage("Not a valid email"),
     passwordCheck,

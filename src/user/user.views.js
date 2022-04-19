@@ -1,7 +1,7 @@
 const express = require('express');
 
 function login_form(req, res) {
-    res.render('user/login');
+    res.render('user/login', { errors: {}});
 }
 
 function login_failure(req, res) {
